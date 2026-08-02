@@ -1,0 +1,159 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Submit a design</title>
+<style>
+ body{font:15px/1.5 system-ui;margin:2rem auto;max-width:52rem;color:#111}
+ .who{background:#eef4ff;border-left:3px solid #47c;padding:.5rem .8rem;margin:.6rem 0;
+      font-size:14px}
+ .draftbanner{background:#f3f0ff;border-left:3px solid #74c;padding:.5rem .8rem;
+      margin:.6rem 0;font-weight:600}
+ label{display:block;margin:1rem 0 .3rem;font-weight:600}
+ select,input[type=file]{font:inherit;padding:.3rem}
+ .note{color:#666;font-size:13px;margin:.3rem 0}
+ .f{border:1px solid #ddd;border-radius:6px;padding:.7rem .9rem;margin:.5rem 0}
+ .fail{border-left:4px solid #c33} .unclear{border-left:4px solid #c90}
+ .pass{border-left:4px solid #ccc;opacity:.85}
+ .tag{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#666}
+ .stmt{font-weight:600;margin:.25rem 0 .35rem} .ev{margin:.25rem 0}
+ .dochdr{border:1px solid #ddd;border-radius:6px;padding:.45rem .7rem;margin:.6rem 0;
+         font-size:13px;color:#555}
+ .dochdr .proj{font-size:16px;font-weight:700;color:#111;margin-right:.4rem}
+ button{font:inherit;padding:.4rem .8rem;margin-top:1rem}
+ #status{margin:1rem 0;color:#555}
+ /* Advisory model rationale — secondary to the validated fields, collapsed. */
+ .reason{margin:.35rem 0 .1rem}
+ .reason>summary{font-size:12px;color:#777;cursor:pointer}
+ .reason p{margin:.35rem 0 0;font-size:13px;color:#555}
+</style>
+<h1 id="title">Submit a design for review</h1>
+<div id="who" class="who"></div>
+<div id="form"></div>
+<div id="status"></div>
+<div id="draft"></div>
+<script>
+const runId = new URLSearchParams(location.search).get("run");
+
+// Escape untrusted text before it enters innerHTML. The filename is the one
+// free-text field in the document header, and a filename doesn't feel like
+// content — which is exactly how an XSS in it would slip through.
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+
+// One compact strip of document context, above the findings. All values are
+// server-provided from the STORED artifact record (submitter = who ingested it),
+// never from the request.
+function docHeaderStrip(d) {
+  const a = d.artifact;
+  const meta = [
+    esc(a.filename),
+    "submitted by " + esc(a.submitter),
+    new Date(a.submitted_at).toLocaleString(),
+    "sha " + (a.content_sha256 || "").slice(0, 8),
+  ].join(" · ");
+  return `<div class="dochdr"><span class="proj">${esc(d.project_name)}</span>${meta}</div>`;
+}
+
+// Identity stamp — resolved SERVER-SIDE from the (forged, for the demo) subject.
+// The submitter never chooses the org; it is shown, not asked (FBR-2).
+async function showWho() {
+  try {
+    const w = await (await fetch("/whoami")).json();
+    const co = w.company ? ` · ${w.company}` : "";
+    document.getElementById("who").textContent =
+      `Submitting as ${w.subject} · ${w.org}${co}`;
+  } catch { document.getElementById("who").textContent = "Submitting as (unknown)"; }
+}
+
+async function showForm() {
+  const projects = (await (await fetch("/projects/mine")).json()).projects;
+  const options = projects
+    .map(p => `<option value="${p.project_id}">${p.name} (${p.project_id})</option>`)
+    .join("");
+  document.getElementById("form").innerHTML = `
+    <label for="project">Project</label>
+    <select id="project">${options}</select>
+    <p class="note">The list shows only projects you can see — the organisation
+      is never typed or chosen.</p>
+    <label for="file">Design document</label>
+    <input id="file" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain">
+    <p class="note">Markdown and plaintext only. No Word/PDF in this demo.</p>
+    <button id="go">Submit for review</button>`;
+  document.getElementById("go").onclick = submit;
+}
+
+async function submit() {
+  const pick = document.getElementById("project");
+  const fileEl = document.getElementById("file");
+  const file = fileEl.files[0];
+  if (!file) { document.getElementById("status").textContent = "Choose a file first."; return; }
+  document.getElementById("form").style.display = "none";
+  document.getElementById("status").textContent = "Uploading and running the review… this calls the model and can take ~30s.";
+  const body = await file.text();
+  const r = await fetch(
+    `/projects/${pick.value}/submit?filename=${encodeURIComponent(file.name)}`,
+    { method: "POST", headers: {"content-type": "text/plain"}, body });
+  if (!r.ok) {
+    const e = await r.json().catch(() => ({detail: r.statusText}));
+    document.getElementById("status").textContent = "Could not submit: " + (e.detail || r.status);
+    document.getElementById("form").style.display = "";
+    return;
+  }
+  const { run_id } = await r.json();
+  location.search = "?run=" + run_id;   // reload into the draft view
+}
+
+// Neutral count — findings NEEDING ATTENTION. Never a readiness score, never a
+// percentage, never a denominator (FBR-4c).
+const needsAttention = f => f.verdict === "fail" || f.verdict === "unclear";
+
+// `unclear` means YOUR design is silent on the rule — not that the rulebook is
+// inadequate. On the submitter's view, say so and give the next step.
+function evidenceBlock(f) {
+  if (f.verdict === "unclear") {
+    return `<p class="ev"><em>Your design doesn't state how this rule is met.</em> `
+         + `Add this detail and resubmit.</p>`;
+  }
+  return `<p class="ev">${f.evidence || "<em>no quoted evidence</em>"}</p>`;
+}
+
+async function showDraft() {
+  const r = await fetch(`/reviews/${runId}`);
+  if (!r.ok) { document.getElementById("status").textContent = "Not found."; return; }
+  const d = await r.json();
+  document.getElementById("title").textContent = "Your draft review";
+
+  const sent = d.status !== "draft";
+  document.getElementById("draft").innerHTML =
+    docHeaderStrip(d)
+    + (sent
+      ? `<div class="draftbanner">Sent to the reviewer — now in the architect's queue.</div>`
+      : `<div class="draftbanner">DRAFT — only you can see this. Not yet sent to the reviewer.</div>`)
+    + `<p>${d.findings.filter(needsAttention).length} finding(s) need attention.</p>`
+    // Findings shown in full — rule statement and evidence — but with NO
+    // accept / override / waive controls. Those are the architect's, not the
+    // submitter's.
+    + d.findings.map(f => `
+      <div class="f ${f.verdict}">
+        <span class="tag">${f.rule_id} · ${f.verdict}${
+          f.verdict === "pass" ? "" :
+          ` · ${f.severity_is_potential ? "potential " : ""}${f.severity}`}</span>
+        ${f.statement ? `<p class="stmt">${f.statement}</p>` : ""}
+        ${evidenceBlock(f)}
+        ${f.reasoning && f.reasoning.trim()
+          ? `<details class="reason">
+               <summary>Agent's reasoning (unverified)</summary>
+               <p>${esc(f.reasoning)}</p>
+             </details>`
+          : ""}
+      </div>`).join("")
+    + (sent ? "" : `<button id="send">Send to reviewer</button>`);
+
+  if (!sent) document.getElementById("send").onclick = async () => {
+    const s = await fetch(`/reviews/${runId}/send`, { method: "POST" });
+    if (s.ok) showDraft(); else alert("Could not send.");
+  };
+}
+
+showWho();
+if (runId) { showDraft(); } else { showForm(); }
+</script>

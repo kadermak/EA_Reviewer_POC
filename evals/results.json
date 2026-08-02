@@ -1,0 +1,595 @@
+{
+  "meta": {
+    "simulated": true,
+    "label": "SIMULATED evaluation data \u2014 a demonstration of the evaluation METHOD, not a measurement of real-world quality. Real quality needs the SAO's real past reviews as the answer key; these documents and keys were hand-authored for the demo.",
+    "generated_at": "2026-07-25T16:01:52",
+    "rulebook_version": "0.1-sample",
+    "rulebook_sha256": "90e000b9d9839a685306d0770781ded303d4dddd4c78b1a2750cc0fa86d4e3ab",
+    "documents": 6,
+    "runs_per_document": 3
+  },
+  "documents": [
+    {
+      "artifact": "artifact_org-a_proj-a1.md",
+      "subject": "user-a@org-a",
+      "org_id": "org-a",
+      "design_class": "mixed",
+      "must_catch_total": 4,
+      "runs": [
+        {
+          "run_id": "32f93c55-5a86-49d3-bf95-e85d7248421e",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [
+            {
+              "rule_id": "EA-DAT-01",
+              "severity": "medium",
+              "evidence": "Reporting job \u2014 nightly batch that reads directly from the Payment Orchestrator's\n  database to build finance reports."
+            }
+          ],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 5,
+          "input_tokens": 3151,
+          "output_tokens": 3095,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "c1983bb5-7f12-4dc7-9dd5-d044ec3cb746",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3151,
+          "output_tokens": 2121,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "e37a3c9f-2eee-4c1d-8c79-de06dd552263",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [
+            {
+              "rule_id": "EA-DAT-01",
+              "severity": "medium",
+              "evidence": "reads directly from the Payment Orchestrator's\n  database to build finance reports."
+            }
+          ],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 5,
+          "input_tokens": 3151,
+          "output_tokens": 2374,
+          "model_calls": 1,
+          "validation_retries": 0
+        }
+      ],
+      "recall_variation": {
+        "per_run": [
+          4,
+          4,
+          4
+        ],
+        "min": 4,
+        "max": 4,
+        "varies": false
+      },
+      "fails_variation": {
+        "per_run": [
+          5,
+          4,
+          5
+        ],
+        "min": 4,
+        "max": 5,
+        "varies": true
+      },
+      "unscoreable_union": [
+        "EA-DAT-01"
+      ]
+    },
+    {
+      "artifact": "artifact_org-b_proj-b1.md",
+      "subject": "user-b@org-b",
+      "org_id": "org-b",
+      "design_class": "mixed",
+      "must_catch_total": 6,
+      "runs": [
+        {
+          "run_id": "4e61c504-495e-4be8-80f9-363f4a93140b",
+          "status": "awaiting_review",
+          "must_catch_caught": 5,
+          "must_catch_total": 6,
+          "missed_as_pass": [],
+          "missed_as_unclear": [
+            "EA-DAT-02"
+          ],
+          "precision_mentioned": [
+            5,
+            5
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 5,
+          "input_tokens": 3102,
+          "output_tokens": 2933,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "9315d7e4-ea81-4a3c-8754-a47f0b4cf731",
+          "status": "awaiting_review",
+          "must_catch_caught": 6,
+          "must_catch_total": 6,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            6,
+            6
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 6,
+          "input_tokens": 3102,
+          "output_tokens": 2410,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "c7a6a01e-03f1-410d-998c-0215ac1a52ab",
+          "status": "awaiting_review",
+          "must_catch_caught": 6,
+          "must_catch_total": 6,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            6,
+            6
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 6,
+          "input_tokens": 3102,
+          "output_tokens": 3839,
+          "model_calls": 1,
+          "validation_retries": 0
+        }
+      ],
+      "recall_variation": {
+        "per_run": [
+          5,
+          6,
+          6
+        ],
+        "min": 5,
+        "max": 6,
+        "varies": true
+      },
+      "fails_variation": {
+        "per_run": [
+          5,
+          6,
+          6
+        ],
+        "min": 5,
+        "max": 6,
+        "varies": true
+      },
+      "unscoreable_union": []
+    },
+    {
+      "artifact": "artifact_org-a_proj-a1_atlas.md",
+      "subject": "user-a@org-a",
+      "org_id": "org-a",
+      "design_class": "clean",
+      "must_catch_total": 7,
+      "runs": [
+        {
+          "run_id": "b5266892-6ad0-4f9d-9be3-7e6d82c724e1",
+          "status": "awaiting_review",
+          "must_catch_caught": 6,
+          "must_catch_total": 7,
+          "missed_as_pass": [],
+          "missed_as_unclear": [
+            "EA-RES-01"
+          ],
+          "precision_mentioned": null,
+          "false_positive_rate": [
+            0,
+            14
+          ],
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 0,
+          "input_tokens": 3181,
+          "output_tokens": 2312,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "ad9ce6f3-b7aa-4361-9937-1f94960cbd1a",
+          "status": "awaiting_review",
+          "must_catch_caught": 6,
+          "must_catch_total": 7,
+          "missed_as_pass": [],
+          "missed_as_unclear": [
+            "EA-RES-01"
+          ],
+          "precision_mentioned": null,
+          "false_positive_rate": [
+            0,
+            14
+          ],
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 0,
+          "input_tokens": 3181,
+          "output_tokens": 2004,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "5a00d4cc-59c5-41f3-a67b-48b1a7a15e77",
+          "status": "awaiting_review",
+          "must_catch_caught": 7,
+          "must_catch_total": 7,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": null,
+          "false_positive_rate": [
+            0,
+            14
+          ],
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 0,
+          "input_tokens": 3181,
+          "output_tokens": 2564,
+          "model_calls": 1,
+          "validation_retries": 0
+        }
+      ],
+      "recall_variation": {
+        "per_run": [
+          6,
+          6,
+          7
+        ],
+        "min": 6,
+        "max": 7,
+        "varies": true
+      },
+      "fails_variation": {
+        "per_run": [
+          0,
+          0,
+          0
+        ],
+        "min": 0,
+        "max": 0,
+        "varies": false
+      },
+      "unscoreable_union": []
+    },
+    {
+      "artifact": "artifact_org-a_proj-a1_lakehouse.md",
+      "subject": "user-a@org-a",
+      "org_id": "org-a",
+      "design_class": "fails-data-obs-tech",
+      "must_catch_total": 4,
+      "runs": [
+        {
+          "run_id": "a64847af-002d-4d34-a16f-e68527d8ebd3",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3134,
+          "output_tokens": 2194,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "6149f945-8a50-423b-91a1-aa39b8204d39",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3134,
+          "output_tokens": 2616,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "51c275d5-5082-4397-9934-be3233019eeb",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3134,
+          "output_tokens": 2577,
+          "model_calls": 1,
+          "validation_retries": 0
+        }
+      ],
+      "recall_variation": {
+        "per_run": [
+          4,
+          4,
+          4
+        ],
+        "min": 4,
+        "max": 4,
+        "varies": false
+      },
+      "fails_variation": {
+        "per_run": [
+          4,
+          4,
+          4
+        ],
+        "min": 4,
+        "max": 4,
+        "varies": false
+      },
+      "unscoreable_union": []
+    },
+    {
+      "artifact": "artifact_org-b_proj-b1_portal.md",
+      "subject": "user-b@org-b",
+      "org_id": "org-b",
+      "design_class": "fails-identity-integration",
+      "must_catch_total": 4,
+      "runs": [
+        {
+          "run_id": "64ea60f3-bd1a-4bd1-82c8-8d42cea3556a",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3117,
+          "output_tokens": 2976,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "5ffb99cd-30c5-4445-9d67-23d238ee2b9d",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3117,
+          "output_tokens": 3221,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "67d84893-364d-4c9e-9609-ab8db260a9f0",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            4,
+            4
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 4,
+          "input_tokens": 3117,
+          "output_tokens": 2568,
+          "model_calls": 1,
+          "validation_retries": 0
+        }
+      ],
+      "recall_variation": {
+        "per_run": [
+          4,
+          4,
+          4
+        ],
+        "min": 4,
+        "max": 4,
+        "varies": false
+      },
+      "fails_variation": {
+        "per_run": [
+          4,
+          4,
+          4
+        ],
+        "min": 4,
+        "max": 4,
+        "varies": false
+      },
+      "unscoreable_union": []
+    },
+    {
+      "artifact": "artifact_org-b_proj-b1_sketch.md",
+      "subject": "user-b@org-b",
+      "org_id": "org-b",
+      "design_class": "unclear-heavy",
+      "must_catch_total": 4,
+      "runs": [
+        {
+          "run_id": "134d2e64-87d7-4859-8e66-3e0c7a4807f5",
+          "status": "awaiting_review",
+          "must_catch_caught": 4,
+          "must_catch_total": 4,
+          "missed_as_pass": [],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            1,
+            1
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 1,
+          "input_tokens": 2931,
+          "output_tokens": 3201,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "1b523e20-d5f8-4076-83cf-c35074b5f9c3",
+          "status": "awaiting_review",
+          "must_catch_caught": 3,
+          "must_catch_total": 4,
+          "missed_as_pass": [
+            "EA-DAT-01"
+          ],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            1,
+            2
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 2,
+          "input_tokens": 2931,
+          "output_tokens": 2838,
+          "model_calls": 1,
+          "validation_retries": 0
+        },
+        {
+          "run_id": "d47d0b66-9e17-4a3a-9eee-49aa784b502a",
+          "status": "awaiting_review",
+          "must_catch_caught": 3,
+          "must_catch_total": 4,
+          "missed_as_pass": [
+            "EA-DAT-01"
+          ],
+          "missed_as_unclear": [],
+          "precision_mentioned": [
+            1,
+            2
+          ],
+          "false_positive_rate": null,
+          "unscoreable_fails": [],
+          "severity_mismatches": [],
+          "n_findings": 14,
+          "n_fails": 2,
+          "input_tokens": 2931,
+          "output_tokens": 2504,
+          "model_calls": 1,
+          "validation_retries": 0
+        }
+      ],
+      "recall_variation": {
+        "per_run": [
+          4,
+          3,
+          3
+        ],
+        "min": 3,
+        "max": 4,
+        "varies": true
+      },
+      "fails_variation": {
+        "per_run": [
+          1,
+          2,
+          2
+        ],
+        "min": 1,
+        "max": 2,
+        "varies": true
+      },
+      "unscoreable_union": []
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "purpose": "Answer key for artifact_org-b_proj-b1_portal.md — violations concentrated in Identity and Integration. Never shown to the model.",
+    "org_id": "org-b",
+    "project_id": "proj-b1",
+    "design_class": "fails-identity-integration"
+  },
+  "expected_findings": [
+    {
+      "rule_id": "EA-IAM-01",
+      "verdict": "fail",
+      "severity": "high",
+      "evidence": "Staff and partners sign in with a local username and password; enterprise single sign-on is not used.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-INT-02",
+      "verdict": "fail",
+      "severity": "critical",
+      "evidence": "The Shipment API is exposed on the internet and does not require authentication; any caller may read and write shipments.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-INT-01",
+      "verdict": "fail",
+      "severity": "high",
+      "evidence": "The Tracking Service connects directly to the Fleet platform's database rather than a published API.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-IAM-02",
+      "verdict": "fail",
+      "severity": "medium",
+      "evidence": "Portal service accounts are granted full administrator rights on every backend database.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-SEC-01",
+      "verdict": "pass",
+      "evidence": "Portal Web is internet-facing and sits behind the enterprise WAF.",
+      "must_catch": false
+    },
+    {
+      "rule_id": "EA-SEC-03",
+      "verdict": "pass",
+      "evidence": "Secrets are held in the approved secrets manager.",
+      "must_catch": false
+    }
+  ]
+}

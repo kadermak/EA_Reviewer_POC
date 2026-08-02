@@ -1,0 +1,182 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>SAO Review</title>
+<style>
+ body{font:15px/1.5 system-ui;margin:2rem auto;max-width:52rem;color:#111}
+ .flag{background:#fffbe6;border-left:3px solid #c90;padding:.6rem .8rem;margin:1rem 0}
+ .f{border:1px solid #ddd;border-radius:6px;padding:.7rem .9rem;margin:.5rem 0}
+ .fail{border-left:4px solid #c33} .unclear{border-left:4px solid #c90}
+ .pass{border-left:4px solid #ccc;opacity:.85}
+ .tag{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#666}
+ .stmt{font-weight:600;margin:.25rem 0 .35rem}
+ .ev{margin:.25rem 0}
+ .q{display:block;border:1px solid #ddd;border-radius:6px;padding:.7rem .9rem;
+    margin:.5rem 0;text-decoration:none;color:inherit}
+ .q:hover{border-color:#888}
+ .dochdr{border:1px solid #ddd;border-radius:6px;padding:.45rem .7rem;margin:.6rem 0;
+         font-size:13px;color:#555}
+ .dochdr .proj{font-size:16px;font-weight:700;color:#111;margin-right:.4rem}
+ button{margin-right:.4rem}
+ /* Unverified model reasoning — visually secondary to the validated fields. */
+ .think{background:#f6f6f8;border:1px solid #e0e0e6;border-radius:6px;
+        padding:.5rem .7rem;margin:.6rem 0}
+ .think>summary{color:#a00;font-size:12px;cursor:pointer}
+ .think pre{white-space:pre-wrap;font:12px/1.45 ui-monospace,SFMono-Regular,monospace;
+            color:#333;margin:.55rem 0 0}
+ .reason{margin:.35rem 0 .1rem}
+ .reason>summary{font-size:12px;color:#777;cursor:pointer}
+ .reason p{margin:.35rem 0 0;font-size:13px;color:#555}
+</style>
+<h1 id="title">Findings awaiting your review</h1>
+<div id="dochdr"></div>
+<p id="outstanding"></p>
+<div id="flags"></div>
+<div id="agentthinking"></div>
+<div id="findings"></div>
+<button id="complete">Complete review</button>
+<script>
+// Deliberately absent: any aggregate. No score, no ratio, no "n of m" — a count
+// of passes is a compliance claim wearing a number's clothing. `awaiting` states
+// work outstanding, which is not the same thing.
+const runId = new URLSearchParams(location.search).get("run");
+
+// Escape untrusted text before it enters innerHTML. The filename is user-chosen
+// free text (the only such field in the document header) and a filename doesn't
+// feel like content, which is how an XSS in a "harmless" field slips through.
+// project_name and submitter are escaped too — cheap, and defence in depth.
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+
+// One compact strip of document context, above the findings so the sorted list
+// stays visible. Every value is server-provided from the STORED artifact record
+// (submitter is who ingested it, not who is viewing), never from the request.
+function docHeaderStrip(d) {
+  const a = d.artifact;
+  const meta = [
+    esc(a.filename),
+    "submitted by " + esc(a.submitter),
+    new Date(a.submitted_at).toLocaleString(),
+    "sha " + (a.content_sha256 || "").slice(0, 8),
+  ].join(" · ");
+  return `<div class="dochdr"><span class="proj">${esc(d.project_name)}</span>${meta}</div>`;
+}
+
+// A finding still NEEDS a decision only if its verdict asserts something
+// (decision_required, i.e. fail/unclear) AND it has not been decided yet. The
+// header count and the "decision required" badge are BOTH derived from this one
+// predicate, so they cannot show different numbers.
+const needsDecision = f => f.decision_required && f.reviewer_action === "pending";
+
+// Severity is a RULE property, not a verdict. On a pass it carries no exposure
+// meaning, so showing "PASS · CRITICAL" reads as a critical problem when the
+// rule simply passed — suppress it there. On `unclear` it is POTENTIAL exposure
+// ("we could not tell whether a critical rule is met"), labelled as such.
+function severityLabel(f) {
+  if (f.verdict === "pass") return "";
+  return ` · ${f.severity_is_potential ? "potential " : ""}${f.severity}`;
+}
+
+// `unclear` means the DESIGN is silent on the rule — not that the rulebook is
+// inadequate. The bare empty-evidence placeholder was ambiguous between those
+// two readings, so say which one it is. Fail/pass show the quoted evidence.
+function evidenceBlock(f) {
+  if (f.verdict === "unclear") {
+    return `<p class="ev"><em>Your design doesn't state how this rule is met.</em></p>`;
+  }
+  return `<p class="ev">${f.evidence || "<em>no quoted evidence</em>"}</p>`;
+}
+
+// Fail/unclear get the full triad and their current status. A pass is
+// overridable — a reviewer may challenge it — but is NOT presented as awaiting
+// action: no triad, no "pending". Requiring a click on every pass is the
+// rubber-stamping the fail/unclear-only design exists to avoid.
+function actions(f) {
+  if (f.decision_required) {
+    return `
+      <button onclick="decide('${f.finding_id}','accepted')">Accept</button>
+      <button onclick="decide('${f.finding_id}','overridden')">Override</button>
+      <button onclick="decide('${f.finding_id}','waived')">Waive</button>
+      <span>${f.reviewer_action}</span>`;
+  }
+  return f.reviewer_action === "pending"
+    ? `<button onclick="decide('${f.finding_id}','overridden')">Override this pass</button>`
+    : `<span>${f.reviewer_action}</span>
+       <button onclick="decide('${f.finding_id}','overridden')">Override this pass</button>`;
+}
+
+// The reviewer's LANDING view. With no ?run= they see their queue (RLS decides
+// its membership server-side) and pick a run, rather than pasting a UUID.
+async function loadQueue() {
+  document.getElementById("complete").style.display = "none";
+  const r = await fetch("/queue");
+  if (!r.ok) { document.body.innerHTML = "<p>Could not load the queue.</p>"; return; }
+  const runs = (await r.json()).runs;
+  document.getElementById("title").textContent = "Your review queue";
+  document.getElementById("dochdr").innerHTML = "";  // no single document here
+  document.getElementById("outstanding").textContent = runs.length
+    ? `${runs.length} review(s) awaiting your decision.`
+    : "Nothing awaiting your review.";
+  document.getElementById("findings").innerHTML = runs.map(run => `
+    <a class="q" href="?run=${run.run_id}">
+      <strong>${run.project_id}</strong>
+      <span class="tag"> · ${new Date(run.created_at).toLocaleString()}</span>
+    </a>`).join("");
+}
+
+async function load() {
+  const r = await fetch(`/reviews/${runId}`);
+  if (!r.ok) { document.body.innerHTML = "<p>Not found.</p>"; return; }
+  const d = await r.json();
+
+  document.getElementById("dochdr").innerHTML = docHeaderStrip(d);
+  const outstanding = d.findings.filter(needsDecision).length;
+  document.getElementById("outstanding").textContent =
+    `${outstanding} finding(s) still need your decision.`;
+
+  document.getElementById("flags").innerHTML = d.artifact.flags
+    .map(f => `<div class="flag">${f.observation}</div>`).join("");
+
+  // The model's whole-review reasoning trace: one collapsed panel above the
+  // findings. ESCAPED (it is model output over an untrusted document, so it can
+  // contain markup) and LABELLED as not part of the reviewed decision — it is
+  // context, never a substitute for the validated verdict/evidence/severity.
+  const trace = (d.thinking_trace || "").trim();
+  document.getElementById("agentthinking").innerHTML = trace
+    ? `<details class="think">
+         <summary>How the agent reasoned — unverified model reasoning, not part of the reviewed findings</summary>
+         <pre>${esc(trace)}</pre>
+       </details>`
+    : "";
+  // The rule STATEMENT sits directly above the evidence quote: a reviewer reads
+  // what the rule requires next to what the agent quoted, so a misattributed
+  // finding (right quote, wrong rule) fails a glance test.
+  document.getElementById("findings").innerHTML = d.findings.map(f => `
+    <div class="f ${f.verdict}">
+      <span class="tag">${f.rule_id} · ${f.verdict}${severityLabel(f)}${
+        needsDecision(f) ? " · decision required" : ""}</span>
+      ${f.statement ? `<p class="stmt">${f.statement}</p>` : ""}
+      ${evidenceBlock(f)}
+      ${f.reasoning && f.reasoning.trim()
+        ? `<details class="reason">
+             <summary>Agent's reasoning (unverified)</summary>
+             <p>${esc(f.reasoning)}</p>
+           </details>`
+        : ""}
+      ${actions(f)}
+    </div>`).join("");
+}
+
+async function decide(id, action) {
+  await fetch(`/reviews/${runId}/decide`, {
+    method: "POST", headers: {"content-type": "application/json"},
+    body: JSON.stringify({decisions: {[id]: action}})});
+  load();
+}
+document.getElementById("complete").onclick = async () => {
+  const r = await fetch(`/reviews/${runId}/complete`, {method: "POST"});
+  alert(r.ok ? "Review complete." : "Findings still require a decision.");
+  load();
+};
+
+if (runId) { load(); } else { loadQueue(); }
+</script>

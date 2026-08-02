@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "purpose": "Answer key for artifact_org-b_proj-b1.md.",
+    "org_id": "org-b",
+    "project_id": "proj-b1"
+  },
+  "expected_findings": [
+    {
+      "rule_id": "EA-INT-02",
+      "verdict": "fail",
+      "severity": "critical",
+      "evidence": "The public Ingest API enforces no authentication on requests.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-SEC-01",
+      "verdict": "fail",
+      "severity": "critical",
+      "evidence": "The internet-facing Ingest API does not sit behind the enterprise WAF.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-SEC-02",
+      "verdict": "fail",
+      "severity": "high",
+      "evidence": "Vehicle device to Ingest API traffic is plaintext HTTP, not TLS 1.2+.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-DAT-02",
+      "verdict": "fail",
+      "severity": "high",
+      "evidence": "The confidential Driver Datastore does not state encryption at rest.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-IAM-01",
+      "verdict": "fail",
+      "severity": "high",
+      "evidence": "The Dispatch Portal uses local application accounts instead of enterprise SSO.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-TEC-01",
+      "verdict": "fail",
+      "severity": "medium",
+      "evidence": "Uses an unapproved mapping database not on the technology catalogue, with no waiver.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-RES-01",
+      "verdict": "pass",
+      "evidence": "Tracking Service is deployed across two availability zones.",
+      "must_catch": false
+    },
+    {
+      "rule_id": "EA-RES-02",
+      "verdict": "pass",
+      "evidence": "Backup and recovery documented with a 4-hour recovery objective.",
+      "must_catch": false
+    }
+  ]
+}

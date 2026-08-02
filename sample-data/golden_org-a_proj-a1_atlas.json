@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "purpose": "Answer key for artifact_org-a_proj-a1_atlas.md — a CLEAN design that should pass every must_catch rule. Used to measure the false-positive rate: any fail the agent produces here is a false positive. Never shown to the model.",
+    "org_id": "org-a",
+    "project_id": "proj-a1",
+    "design_class": "clean"
+  },
+  "expected_findings": [
+    {
+      "rule_id": "EA-SEC-01",
+      "verdict": "pass",
+      "evidence": "Atlas Web is internet-facing and sits behind the enterprise WAF.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-INT-02",
+      "verdict": "pass",
+      "evidence": "Every Atlas API endpoint enforces authentication and role-based authorisation.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-DAT-02",
+      "verdict": "pass",
+      "evidence": "The Reporting Store holds confidential data and is encrypted at rest.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-DAT-03",
+      "verdict": "pass",
+      "evidence": "Personal data is held only in the approved EU region.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-INT-01",
+      "verdict": "pass",
+      "evidence": "The Settlement Connector reads via the Payments platform's published, versioned API rather than its database.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-RES-01",
+      "verdict": "pass",
+      "evidence": "Atlas Web and Atlas API are deployed across three availability zones.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-IAM-01",
+      "verdict": "pass",
+      "evidence": "Human access is via enterprise single sign-on only.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-RES-02",
+      "verdict": "pass",
+      "evidence": "A documented nightly backup with a stated 4-hour recovery objective exists for the Reporting Store.",
+      "must_catch": false
+    },
+    {
+      "rule_id": "EA-OBS-01",
+      "verdict": "pass",
+      "evidence": "All services emit centralised logs and health metrics to the enterprise monitoring platform.",
+      "must_catch": false
+    }
+  ]
+}

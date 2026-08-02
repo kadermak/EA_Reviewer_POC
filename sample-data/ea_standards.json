@@ -1,0 +1,138 @@
+{
+  "rulebook_meta": {
+    "name": "Enterprise Architecture Standards (SAMPLE / PLACEHOLDER)",
+    "version": "0.1-sample",
+    "status": "SIMULATED — replace with authoritative standards before real use",
+    "scope": "global",
+    "note": "These rules are illustrative and structurally realistic so the conformance agent can be built and tested now. Wording is generic, not tied to any real organisation's standards.",
+    "severity_scale": ["critical", "high", "medium", "low"]
+  },
+  "rules": [
+    {
+      "id": "EA-SEC-01",
+      "category": "Security",
+      "statement": "All internet-facing services must sit behind the enterprise web application firewall (WAF).",
+      "rationale": "Provides a consistent perimeter control against common web attacks.",
+      "severity": "critical",
+      "check_hint": "Look for any public/internet-facing endpoint in the design that is not routed through the WAF.",
+      "source_ref": "TBD-SecurityStandard-§WAF"
+    },
+    {
+      "id": "EA-SEC-02",
+      "category": "Security",
+      "statement": "Data in transit must be encrypted using TLS 1.2 or higher for all service-to-service and client-to-service communication.",
+      "rationale": "Protects data confidentiality and integrity in transit.",
+      "severity": "high",
+      "check_hint": "Flag any data flow described as plaintext/unencrypted or using deprecated TLS versions.",
+      "source_ref": "TBD-SecurityStandard-§Encryption"
+    },
+    {
+      "id": "EA-SEC-03",
+      "category": "Security",
+      "statement": "Secrets (API keys, passwords, certificates) must be stored in the approved secrets manager, never in code or configuration files.",
+      "rationale": "Prevents credential leakage via source control or artifacts.",
+      "severity": "high",
+      "check_hint": "Flag any mention of credentials in config, environment files committed to repos, or hardcoded secrets.",
+      "source_ref": "TBD-SecurityStandard-§SecretsMgmt"
+    },
+    {
+      "id": "EA-DAT-01",
+      "category": "Data",
+      "statement": "All data stores must declare a data classification (public, internal, confidential, restricted).",
+      "rationale": "Classification drives the controls that must be applied.",
+      "severity": "medium",
+      "check_hint": "Flag any datastore in the design with no stated classification.",
+      "source_ref": "TBD-DataStandard-§Classification"
+    },
+    {
+      "id": "EA-DAT-02",
+      "category": "Data",
+      "statement": "Confidential or restricted data must be encrypted at rest.",
+      "rationale": "Protects sensitive data if storage media are compromised.",
+      "severity": "high",
+      "check_hint": "Flag confidential/restricted datastores that do not state encryption at rest.",
+      "source_ref": "TBD-DataStandard-§EncryptionAtRest"
+    },
+    {
+      "id": "EA-DAT-03",
+      "category": "Data",
+      "statement": "Personal data must remain within approved hosting regions and must not be replicated outside them.",
+      "rationale": "Meets data-residency and regulatory obligations.",
+      "severity": "critical",
+      "check_hint": "Flag any design that stores or replicates personal data outside the approved region(s).",
+      "source_ref": "TBD-DataStandard-§Residency"
+    },
+    {
+      "id": "EA-INT-01",
+      "category": "Integration",
+      "statement": "Systems must integrate through published, versioned APIs rather than direct database access across system boundaries.",
+      "rationale": "Preserves loose coupling and maintainability.",
+      "severity": "high",
+      "check_hint": "Flag any design where one system reads or writes another system's database directly.",
+      "source_ref": "TBD-IntegrationStandard-§APIFirst"
+    },
+    {
+      "id": "EA-INT-02",
+      "category": "Integration",
+      "statement": "All exposed APIs must enforce authentication and authorisation on every request.",
+      "rationale": "Prevents unauthorised access to services.",
+      "severity": "critical",
+      "check_hint": "Flag any API described as open/unauthenticated or lacking access control.",
+      "source_ref": "TBD-IntegrationStandard-§APIAuth"
+    },
+    {
+      "id": "EA-RES-01",
+      "category": "Resilience",
+      "statement": "Business-critical services must be deployed across at least two availability zones.",
+      "rationale": "Avoids a single point of failure at the zone level.",
+      "severity": "high",
+      "check_hint": "Flag business-critical components deployed to a single zone/region with no redundancy.",
+      "source_ref": "TBD-ResilienceStandard-§HA"
+    },
+    {
+      "id": "EA-RES-02",
+      "category": "Resilience",
+      "statement": "Every service must define a documented backup and recovery approach with a stated recovery objective.",
+      "rationale": "Ensures data and service can be restored within agreed limits.",
+      "severity": "medium",
+      "check_hint": "Flag services with no stated backup/recovery approach or recovery objective.",
+      "source_ref": "TBD-ResilienceStandard-§BackupRecovery"
+    },
+    {
+      "id": "EA-OBS-01",
+      "category": "Observability",
+      "statement": "All services must emit centralised logs and health metrics to the enterprise monitoring platform.",
+      "rationale": "Enables operational visibility and incident response.",
+      "severity": "medium",
+      "check_hint": "Flag services that do not send logs/metrics to central monitoring.",
+      "source_ref": "TBD-OperationsStandard-§Observability"
+    },
+    {
+      "id": "EA-TEC-01",
+      "category": "Technology",
+      "statement": "Components must use technologies from the approved technology standards catalogue; deviations require a recorded waiver.",
+      "rationale": "Controls sprawl and keeps the estate supportable.",
+      "severity": "medium",
+      "check_hint": "Flag any technology/component not on the approved list and with no waiver reference.",
+      "source_ref": "TBD-TechnologyStandard-§ApprovedCatalogue"
+    },
+    {
+      "id": "EA-IAM-01",
+      "category": "Identity",
+      "statement": "Human access to systems must use enterprise single sign-on (SSO); local application accounts are not permitted for end users.",
+      "rationale": "Centralises identity and enables consistent access control.",
+      "severity": "high",
+      "check_hint": "Flag designs relying on local/standalone user accounts instead of enterprise SSO.",
+      "source_ref": "TBD-IdentityStandard-§SSO"
+    },
+    {
+      "id": "EA-IAM-02",
+      "category": "Identity",
+      "statement": "Service-to-service access must follow least privilege, granting only the permissions each service requires.",
+      "rationale": "Limits blast radius if a service is compromised.",
+      "severity": "medium",
+      "check_hint": "Flag broad/admin-level or wildcard permissions granted to services.",
+      "source_ref": "TBD-IdentityStandard-§LeastPrivilege"
+    }
+  ]
+}

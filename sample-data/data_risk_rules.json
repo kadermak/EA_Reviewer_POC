@@ -1,0 +1,59 @@
+{
+  "rulebook_meta": {
+    "name": "Data Risk Register Review Criteria (PLACEHOLDER / FUTURE)",
+    "version": "0.0-placeholder",
+    "status": "NOT USED IN THE POC — placeholder to show how a future review domain plugs in as DATA",
+    "scope": "global",
+    "note": "When the data-risk domain is built, these criteria are what the data_risk_agent checks a project's risk register against. Wording is illustrative; the Solution Architect Office / risk owners will firm these up. Adding or editing criteria here is a DATA change, not a code change."
+  },
+  "rules": [
+    {
+      "id": "DR-QUAL-01",
+      "category": "Register quality",
+      "statement": "Every risk must be well-formed with a clear cause, event, and consequence.",
+      "severity": "medium",
+      "check_hint": "Flag risk entries that state only a vague concern without cause/event/consequence.",
+      "source_ref": "TBD-RiskStandard-§RiskStatement"
+    },
+    {
+      "id": "DR-QUAL-02",
+      "category": "Register quality",
+      "statement": "Every risk must have an assigned owner and a target resolution date.",
+      "severity": "medium",
+      "check_hint": "Flag risks with no named owner or no date.",
+      "source_ref": "TBD-RiskStandard-§Ownership"
+    },
+    {
+      "id": "DR-SCORE-01",
+      "category": "Scoring",
+      "statement": "Likelihood and impact scores must use the approved rating scale and be internally consistent.",
+      "severity": "medium",
+      "check_hint": "Flag scores outside the approved scale or ratings that contradict the described consequence.",
+      "source_ref": "TBD-RiskStandard-§RatingScale"
+    },
+    {
+      "id": "DR-COV-01",
+      "category": "Coverage",
+      "statement": "The register must cover the expected risk categories (delivery, vendor, dependency, data, security).",
+      "severity": "high",
+      "check_hint": "Flag obvious category gaps — e.g. a data-heavy project with no data risks recorded.",
+      "source_ref": "TBD-RiskStandard-§Coverage"
+    },
+    {
+      "id": "DR-MIT-01",
+      "category": "Mitigation",
+      "statement": "Every high or critical risk must have a documented mitigation or acceptance rationale.",
+      "severity": "high",
+      "check_hint": "Flag high/critical risks with no mitigation and no recorded acceptance.",
+      "source_ref": "TBD-RiskStandard-§Mitigation"
+    },
+    {
+      "id": "DR-XREF-01",
+      "category": "Cross-check",
+      "statement": "Risks implied by the architecture should appear in the register (e.g. a single-region design should carry an availability risk).",
+      "severity": "medium",
+      "check_hint": "Cross-reference architecture findings; flag architectural risks absent from the register.",
+      "source_ref": "TBD-RiskStandard-§ArchitectureCrossCheck"
+    }
+  ]
+}

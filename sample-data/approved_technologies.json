@@ -1,0 +1,25 @@
+{
+  "catalogue_meta": {
+    "name": "Approved Technology Standards Catalogue (SAMPLE / PLACEHOLDER)",
+    "version": "0.1-sample",
+    "status": "SIMULATED — illustrative entries only; replace with the authoritative approved-technology catalogue before real use.",
+    "note": "Backs the conformance agent's lookup_approved_technologies tool. Membership here is what EA-TEC-01 treats as 'approved'; anything absent is a deviation requiring a recorded waiver. Data, not code — the SAO edits this file, no developer needed."
+  },
+  "technologies": [
+    {"name": "PostgreSQL", "category": "Datastore", "status": "approved", "aliases": ["Postgres"]},
+    {"name": "Redis", "category": "Cache", "status": "approved"},
+    {"name": "Apache Kafka", "category": "Messaging", "status": "approved", "aliases": ["Kafka"]},
+    {"name": "Python", "category": "Language", "status": "approved"},
+    {"name": "FastAPI", "category": "Web framework", "status": "approved"},
+    {"name": "React", "category": "Frontend framework", "status": "approved"},
+    {"name": "Kubernetes", "category": "Container platform", "status": "approved", "aliases": ["K8s"]},
+    {"name": "NGINX", "category": "Reverse proxy", "status": "approved"},
+    {"name": "Terraform", "category": "Infrastructure as code", "status": "approved"},
+    {"name": "Prometheus", "category": "Monitoring", "status": "approved"},
+    {"name": "Grafana", "category": "Monitoring", "status": "approved"},
+    {"name": "HashiCorp Vault", "category": "Secrets manager", "status": "approved", "aliases": ["Vault"]},
+    {"name": "Keycloak", "category": "Identity / SSO", "status": "approved"},
+    {"name": "Amazon S3", "category": "Object storage", "status": "approved", "aliases": ["S3"]},
+    {"name": "MongoDB", "category": "Datastore", "status": "deprecated", "note": "Approved for existing systems only; not for new designs without a waiver."}
+  ]
+}

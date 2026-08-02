@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "purpose": "Answer key for artifact_org-b_proj-b1_sketch.md — an under-specified draft that is SILENT on many rules, so unclear should dominate. Never shown to the model.",
+    "org_id": "org-b",
+    "project_id": "proj-b1",
+    "design_class": "unclear-heavy"
+  },
+  "expected_findings": [
+    {
+      "rule_id": "EA-SEC-03",
+      "verdict": "fail",
+      "severity": "high",
+      "evidence": "The database password is kept in the service's configuration file that ships with the deployment, not the approved secrets manager.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-DAT-01",
+      "verdict": "unclear",
+      "evidence": "The draft states it handles some driver and customer information but does not declare a data classification.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-DAT-02",
+      "verdict": "unclear",
+      "evidence": "Whether data is encrypted at rest is not stated.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-RES-01",
+      "verdict": "unclear",
+      "evidence": "Redundancy and availability-zone deployment are noted as not yet described.",
+      "must_catch": true
+    },
+    {
+      "rule_id": "EA-OBS-01",
+      "verdict": "unclear",
+      "evidence": "Monitoring is noted as not yet described.",
+      "must_catch": false
+    },
+    {
+      "rule_id": "EA-SEC-02",
+      "verdict": "pass",
+      "evidence": "All Driver App to Planner Service traffic uses TLS 1.3.",
+      "must_catch": false
+    }
+  ]
+}

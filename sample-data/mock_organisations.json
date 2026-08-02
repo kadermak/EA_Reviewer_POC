@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "purpose": "Two mock organisations under one company, with deliberately DISTINCT, identifiable content so cross-tenant leakage is easy to detect in red-team tests.",
+    "note": "org_id is the isolation boundary (internal, never renamed). `name` is the DISPLAY name shown in the UI. distinct_markers are internal test fixtures, never shown, kept genuinely distinct between orgs — the red-team suite relies on one org's markers never appearing in another's results."
+  },
+  "company": "Home Team Organization",
+  "organisations": [
+    {
+      "org_id": "org-a",
+      "name": "org-ICA",
+      "description": "Handles consumer payment processing.",
+      "distinct_markers": ["AURORA-PAY", "codename BLUEJAY", "project lead: R. Okafor"],
+      "projects": [
+        {
+          "project_id": "proj-a1",
+          "name": "Fast Prototyping System",
+          "criticality": "business-critical",
+          "handles_personal_data": true
+        },
+        {
+          "project_id": "proj-a2",
+          "name": "ITSM System",
+          "criticality": "standard",
+          "handles_personal_data": false
+        }
+      ]
+    },
+    {
+      "org_id": "org-b",
+      "name": "org-HT",
+      "description": "Manages freight tracking and warehouse systems.",
+      "distinct_markers": ["BOREALIS-LOG", "codename SANDPIPER", "project lead: M. Haddad"],
+      "projects": [
+        {
+          "project_id": "proj-b1",
+          "name": "ServiceNow System",
+          "criticality": "business-critical",
+          "handles_personal_data": true
+        },
+        {
+          "project_id": "proj-b2",
+          "name": "Exchange System",
+          "criticality": "standard",
+          "handles_personal_data": false
+        }
+      ]
+    }
+  ]
+}
